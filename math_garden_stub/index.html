@@ -1,0 +1,127 @@
+<html lang='en'>
+
+<head>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+  <!-- Custom styling -->
+  <link rel='stylesheet' href='css/styles.css'>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+  <!-- Custom font -->
+  <script  src='vendor/opencv.js' type="text/javascript"></script>
+  <script  src='processing.js' type="text/javascript"></script>
+  <script  src='maths.js' type="text/javascript"></script>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Just+Another+Hand&display=swap'> 
+</head>
+
+<body>
+
+  <div class='container'>
+
+    <!-- TODO: Add title here -->
+    <h1 id="title">  Math Garden </h1>
+
+    <h2 id='question'><span id='n1'>3</span> + <span id='n2'>2</span> = </h2>
+
+    <!-- TODO: Add a drawing canvas here -->
+    <canvas  id="my-canvas" class='canvas' width="150" height="150"> </canvas>
+
+  </div>
+
+  <div class='container'>
+    <button id='checkAnswer' class='btn' value='Check'>Check answer</button>
+  </div>
+<script type="text/javascript">
+  loadmodel();
+  nextquestion();
+  var currentx=0;
+  var currenty=0;
+  var previousx=0;
+  var previousy=0;
+  var canvas=document.getElementById('my-canvas');
+              var context=canvas.getContext('2d');
+                var isPainting;
+   function preparecanvas()
+{
+              //console.log('preparing canvas');
+  
+              context.fillStyle='#000000';
+              context.strokeStyle='#BCFF00';
+              context.lineWidth=15;
+              context.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+             isPainting=false;
+              document.addEventListener('mousedown',function(event){
+
+                     //console.log('mouse presseed');
+                     currentx=event.clientX-canvas.offsetLeft;
+                     currenty=event.clientY-canvas.offsetTop;
+                     isPainting=true;
+                                  });
+               document.addEventListener('mousemove',function(event){
+                if(isPainting){
+                      previousx=currentx ;
+                      currentx=event.clientX-canvas.offsetLeft;
+                      previousy=currenty;
+                      currenty=event.clientY-canvas.offsetTop;
+                     context.beginPath();
+                     context.moveTo(previousx,previousy);
+                     context.lineTo(currentx,currenty);
+                     context.closePath();
+                     context.stroke();
+                     context.lineJoin='round';
+                   }
+                                 });
+                document.addEventListener('mouseup',function(event){
+                   // console.log('mouse realsed');
+                    isPainting=false;
+                                  });
+               // canvas.addEventListener('mouseleave',function(event){
+                 //    console.log('mouse leave');
+                   //  isPainting=false;
+                    
+                     //             })
+                             document.addEventListener('touchstart',function(event){
+                            // console.log('touch presseed');
+                             currentx=event.touches[0].clientX-canvas.offsetLeft;
+                             currenty=event.touches[0].clientY-canvas.offsetTop;
+                             isPainting=true;
+                                          });
+                                              document.addEventListener('touchend',function(event){
+                                      isPainting=false;
+                                                  });
+                                       document.addEventListener('touchcancel',function(event){
+                                      isPainting=false;
+                                                  });
+            canvas.addEventListener('touchmove',function(event){
+                if(isPainting){
+                      previousx=currentx ;
+                      currentx=event.touches[0].clientX-canvas.offsetLeft;
+                      previousy=currenty;
+                      currenty=event.touches[0].clientY-canvas.offsetTop;
+                     context.beginPath();
+                     context.moveTo(previousx,previousy);
+                     context.lineTo(currentx,currenty);
+                     context.closePath();
+                     context.stroke();
+                     context.lineJoin='round';
+                   }
+                                 });
+}
+                function clearcanvas()
+                {
+                 currentx=0;
+                 currenty=0;
+                 previousx=0;
+                 previousy=0;
+                 context.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+                }
+document.getElementById('checkAnswer').addEventListener('click',function()
+         {
+          checkanswer();
+          clearcanvas();
+          nextquestion();
+         });
+preparecanvas();
+</script>
+
+</body>
+
+</html>
